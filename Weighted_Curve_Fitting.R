@@ -9,7 +9,7 @@ weights_calc <- function(vec , level_of_prediction, skew){
 
 set.seed(1485)
 len <- 20
-level_of_prediction <- 0.01
+level_of_prediction <- 0.3
 x <- runif(len)
 y <- x^3 + rnorm(len,0,0.1)
 ds <- data.frame(x = x, y = y)
@@ -20,7 +20,7 @@ fit1 <- nls(y ~ I(x^power),
             data = ds , 
             start = list(power = 1 ) , 
             trace = T,
-            weights = weights_calc(ds$x,level_of_prediction,1)
+            weights = weights_calc(ds$x,level_of_prediction,0.5)
             )
 m=summary(fit1)$coefficients[1]
 lines(s,s^m,col = "blue")
