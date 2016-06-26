@@ -4,12 +4,16 @@ weights_calc <- function(vec , level_of_prediction, skew){
   return(weights)
 }
 
-
+smape <- function(actual,forecasted){
+  smape <- 1 / (length(actual)) *sum( abs(forecasted - actual) / ((abs(actual) + abs(forecasted)) / 2)  )
+  return(smape)
+  
+}
 
 
 set.seed(1485)
 len <- 20
-level_of_prediction <- 0.3
+level_of_prediction <- 0.2
 x <- runif(len)
 y <- x^3 + rnorm(len,0,0.1)
 ds <- data.frame(x = x, y = y)
@@ -20,13 +24,14 @@ fit1 <- nls(y ~ I(x^power),
             data = ds , 
             start = list(power = 1 ) , 
             trace = T,
-            weights = weights_calc(ds$x,level_of_prediction,0.5)
+            weights = weights_calc(ds$x,level_of_prediction,0.4)
             )
 m=summary(fit1)$coefficients[1]
 lines(s,s^m,col = "blue")
 
-
-
+smape(y,s^m)
+smape(y,s^3)
+m
 #sum(weights)
 plot (x,weights_calc(ds$x,level_of_prediction,1))
 
