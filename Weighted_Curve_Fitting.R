@@ -1,8 +1,16 @@
+library(boot)
+x
+
+boot(x,mean(x),30)
+var(x)
+
+
 weights_calc <- function(vec , level_of_prediction, skew){
   new_vec = level_of_prediction - vec 
-  weights <- dnorm(new_vec,0,skew)
+  weights <- dnorm(new_vec,0,var(vec))
   return(weights)
 }
+
 
 smape <- function(actual,forecasted){
   smape <- 1 / (length(actual)) *sum( abs(forecasted - actual) / ((abs(actual) + abs(forecasted)) / 2)  )
@@ -10,12 +18,13 @@ smape <- function(actual,forecasted){
   
 }
 
+plot(y)
 
 set.seed(1485)
-len <- 20
+len <- 15
 level_of_prediction <- 0.2
-x <- runif(len)
-y <- x^3 + rnorm(len,0,0.1)
+x <- runif(len)*1000
+y <- x^3 + rnorm(len,0,40)
 ds <- data.frame(x = x, y = y)
 plot(y ~ x, main = "Known Cubic with noise",col = "red")
 s <- seq(0,1,length = 100)
@@ -33,7 +42,7 @@ smape(y,s^m)
 smape(y,s^3)
 m
 #sum(weights)
-plot (x,weights_calc(ds$x,level_of_prediction,1))
+plot (x,weights_calc(ds$x,level_of_prediction,0.1))
 
 plot(x,hx)
 
